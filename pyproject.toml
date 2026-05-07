@@ -9,6 +9,9 @@ authors = [
 ]
 dependencies = []
 
+[project.scripts]
+job-application-assistant = "job_application_assistant.cli:main"
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"

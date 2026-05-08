@@ -3,10 +3,15 @@ from pathlib import Path
 from job_application_assistant.io import read_text_file
 
 
-def test_read_text_file(tmp_path: Path) -> None:
-    # Luodaan testiä varten väliaikainen tiedosto, jotta testi ei riipu repoon
-    # erikseen tallennetusta testidatasta.
-    path = tmp_path / "test_file.txt"
+def test_read_text_file() -> None:
+    # Luodaan testitiedosto testin ajon ajaksi suoraan testikansioon, jotta
+    # testi ei riipu pytestin tmp_path-fixturestä tässä ympäristössä.
+    path = Path(__file__).parent / "_runtime_test_file.txt"
     path.write_text("Hello world", encoding="utf-8")
 
-    assert read_text_file(path) == "Hello world"
+    try:
+        assert read_text_file(path) == "Hello world"
+    finally:
+        # Siivotaan testitiedosto pois myös silloin, jos testi epäonnistuu.
+        if path.exists():
+            path.unlink()

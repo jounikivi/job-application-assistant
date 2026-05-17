@@ -1,17 +1,14 @@
 from pathlib import Path
 
+import pytest
+
 from job_application_assistant.io import read_text_file
 
 
-def test_read_text_file() -> None:
-    # Luodaan testitiedosto testin ajon ajaksi suoraan testikansioon, jotta
-    # testi ei riipu pytestin tmp_path-fixturestä tässä ympäristössä.
-    path = Path(__file__).parent / "_runtime_test_file.txt"
-    path.write_text("Hello world", encoding="utf-8")
+def test_read_text_file_raises_for_missing_file() -> None:
+    # Käytetään polkua, jota ei pitäisi olla olemassa.
+    path = Path(__file__).parent / "_missing_file.txt"
 
-    try:
-        assert read_text_file(path) == "Hello world"
-    finally:
-        # Siivotaan testitiedosto pois myös silloin, jos testi epäonnistuu.
-        if path.exists():
-            path.unlink()
+    # jatka tästä ja varmista, että FileNotFoundError heitetään.
+    with pytest.raises(FileNotFoundError, match="File not found"):
+        read_text_file(path)

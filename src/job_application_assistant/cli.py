@@ -6,6 +6,8 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+from job_application_assistant.io import load_input_texts
+
 
 def build_parser() -> argparse.ArgumentParser:
     """Create the top-level argument parser for the application."""
@@ -53,12 +55,14 @@ def handle_analyze(args: argparse.Namespace) -> int:
     """Handle the analyze subcommand.
 
     The real analysis pipeline will be added in later phases. For now, this
-    proves that the CLI wiring works and that paths flow into the app in a
-    typed, testable way.
+    step proves that the CLI can load local source texts in a typed,
+    testable way before preprocessing and extraction are added.
     """
-    print("Analyze command received.")
-    print(f"Job file: {args.job}")
-    print(f"CV file: {args.cv}")
+    loaded_texts = load_input_texts(args.job, args.cv)
+
+    print("Loaded job posting and CV successfully.")
+    print(f"Job text length: {len(loaded_texts.job_text)}")
+    print(f"CV text length: {len(loaded_texts.cv_text)}")
     if args.output is not None:
         print(f"Output file: {args.output}")
     else:
@@ -69,5 +73,9 @@ def handle_analyze(args: argparse.Namespace) -> int:
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Run the CLI application and return a process exit code."""
-    args = parse_args(argv)
-    return args.handler(args)
+    try:
+        args = parse_args(argv)
+        return args.handler(args)
+    except (FileNotFoundError, ValueError) as error:
+        print(f"Error: {error}")
+        return 1

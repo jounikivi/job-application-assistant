@@ -67,5 +67,3 @@ def preprocess_text(
     """Suorita tekstille preprocess-putki."""
     tokens = split_into_tokens(text)
     return remove_stop_words(tokens, stop_words)
-
-    return tokens

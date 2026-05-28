@@ -39,3 +39,8 @@ def test_remove_stop_words_supports_custom_stop_word_set() -> None:
         "python",
         "remote",
     ]
+    
+def test_preprocess_text_runs_full_pipeline() -> None:
+    raw_text = " Python and Data\nEngineering ja Automation "
+
+    assert preprocess_text(raw_text) == ["python", "data", "engineering", "automation"]

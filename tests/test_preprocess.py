@@ -2,6 +2,7 @@ from job_application_assistant.preprocess import (
     normalize_text,
     remove_stop_words,
     split_into_tokens,
+    preprocess_text,
 )
 
 
